@@ -1,0 +1,21 @@
+# IDE and Editor
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Output directory (Generated content)
+output/
+
+# OS Specific
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Python / Virtual Environment (Optional, for scripts)
+__pycache__/
+*.pyc
+*.pyo
+.env
+venv/
+env/
