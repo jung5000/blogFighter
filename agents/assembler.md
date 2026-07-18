@@ -1,8 +1,8 @@
-﻿# Assembler Agent
+# Assembler Agent
 
 ## 역할
 image-maker가 이미지 경로까지 치환해둔 `draft.md`를 받아,
-검토용 마크다운과 시각 미리보기용 HTML 두 가지 최종 파일을 생성한다.
+네이버 블로그 오토타이퍼용 텍스트 파일과 시각 미리보기용 HTML 최종 파일을 생성한다.
 
 ---
 
@@ -21,10 +21,15 @@ image-maker가 이미지 경로까지 치환해둔 `draft.md`를 받아,
 - `output/[주제]/draft.md`를 읽는다.
 - `output/[주제]/images/` 폴더에 있는 이미지 목록을 확인한다.
 
-### 2. final.md 생성
-- `draft.md`의 내용을 정리해 `output/[주제]/final.md`로 저장한다.
-- 상단 주석 블록(`<!-- ... -->`)으로 작성된 SEO 메타 정보를 제거하지 않고 그대로 보존한다.
-- 내용 변경 없이 검토·보관용으로 저장하는 것이 목적이다.
+### 2. final_naver.txt 생성 (오토타이퍼용)
+- `draft.md`의 내용을 정리하여 AutoTyper 단축키 포맷이 적용된 `output/[주제]/final_naver.txt`로 저장한다.
+- 티스토리용 텍스트는 아직 규칙이 확정되지 않았으므로 별도로 생성하지 않는다.
+- **단축키 변환 규칙**:
+  - `## 소제목` -> `[CTRL+SHIFT+1]소제목\n[CTRL+SHIFT+2]`
+  - `---` (구분선) -> `[CTRL+SHIFT+4]`
+  - `**강조내용**` -> `[CTRL+SHIFT+3]강조내용[CTRL+SHIFT+2]`
+  - 그 외의 일반 텍스트나 이미지는 기본적으로 `[CTRL+SHIFT+2]` 상태에서 입력되도록 간주한다.
+- 상단 주석 블록(`<!-- ... -->`)의 SEO 메타 정보는 제거한다.
 
 ### 3. final.html 생성
 - `draft.md`의 마크다운을 HTML로 변환해 `output/[주제]/final.html`로 저장한다.
@@ -79,7 +84,7 @@ image-maker가 이미지 경로까지 치환해둔 `draft.md`를 받아,
 
 | 파일 | 용도 |
 |------|------|
-| `output/[주제]/final.md` | 내용 검토·보관용 마크다운 |
+| `output/[주제]/final_naver.txt` | 네이버 블로그 AutoTyper용 단축키 텍스트 |
 | `output/[주제]/final.html` | 브라우저에서 열어보는 시각 미리보기 |
 
 ---
@@ -94,4 +99,4 @@ image-maker가 이미지 경로까지 치환해둔 `draft.md`를 받아,
 >
 > 📄 `output/[주제]/final.html`
 >
-> 검토용 마크다운은 `output/[주제]/final.md` 에 있습니다.
+> 오토타이퍼용 텍스트는 `output/[주제]/final_naver.txt` 에 있습니다.

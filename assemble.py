@@ -14,16 +14,13 @@ import markdown
 
 output_dir = "output/LED손거울"
 
-def process_file(md_filename, out_html, out_md):
+def process_file(md_filename, out_html, is_naver=False):
     md_path = os.path.join(output_dir, md_filename)
     if not os.path.exists(md_path):
         return
         
     with open(md_path, 'r', encoding='utf-8') as f:
         content = f.read()
-        
-    with open(os.path.join(output_dir, out_md), 'w', encoding='utf-8') as f:
-        f.write(content)
         
     # Extract metadata
     title = ""
@@ -40,6 +37,30 @@ def process_file(md_filename, out_html, out_md):
     if kw_match: keywords = kw_match.group(1)
     
     html_content = markdown.markdown(content)
+    
+    # AutoTyper format transformation for Naver
+    if is_naver:
+        # 1. Remove front matter SEO comments
+        txt_content = re.sub(r'<!--.*?-->\n*', '', content, flags=re.DOTALL)
+        
+        # 2. Process headings (## 소제목 -> [ctrl+shift+1]소제목\n[ctrl+shift+2])
+        # Also matching single # just in case, but formatting as [ctrl+shift+1]
+        def heading_replacer(match):
+            heading_text = match.group(2).strip()
+            return f"[ctrl+shift+1]{heading_text}\n[ctrl+shift+2]"
+        txt_content = re.sub(r'^(#+)\s+(.*)$', heading_replacer, txt_content, flags=re.MULTILINE)
+        
+        # 3. Process horizontal rules (---) -> [ctrl+shift+4]
+        txt_content = re.sub(r'^---+$', '[ctrl+shift+4]', txt_content, flags=re.MULTILINE)
+        
+        # 4. Process bold text (**강조**) -> [ctrl+shift+3]강조[ctrl+shift+2]
+        txt_content = re.sub(r'\*\*(.*?)\*\*', r'[ctrl+shift+3]\1[ctrl+shift+2]', txt_content)
+        
+        # 5. Clean up multiple newlines if needed, but keeping it as is might be safer
+        txt_content = txt_content.strip()
+        
+        with open(os.path.join(output_dir, "final_naver.txt"), 'w', encoding='utf-8') as f:
+            f.write(txt_content)
     
     html_template = f"""<!DOCTYPE html>
 <html lang="ko">
@@ -79,6 +100,13 @@ def process_file(md_filename, out_html, out_md):
     with open(os.path.join(output_dir, out_html), 'w', encoding='utf-8') as f:
         f.write(html_template)
 
-process_file("draft_naver.md", "final_naver.html", "final_naver.md")
-process_file("draft_tistory.md", "final_tistory.html", "final_tistory.md")
-print("Assembly complete.")
+process_file("draft_naver.md", "final_naver.html", is_naver=True)
+process_file("draft_tistory.md", "final_tistory.html", is_naver=False)
+
+# Clean up old markdown final files if they exist
+for old_file in ["final_naver.md", "final_tistory.md"]:
+    old_path = os.path.join(output_dir, old_file)
+    if os.path.exists(old_path):
+        os.remove(old_path)
+
+print("Assembly complete. Generated HTML files and AutoTyper txt.")
