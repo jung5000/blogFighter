@@ -6,8 +6,9 @@
 
 # Output and User files
 output/
+blog ex/
 user-images/
-blgg ex/
+user-data/
 
 # OS Specific
 .DS_Store
