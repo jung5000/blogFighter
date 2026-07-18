@@ -4,8 +4,10 @@
 *.swp
 *.swo
 
-# Output directory (Generated content)
+# Output and User files
 output/
+user-images/
+blgg ex/
 
 # OS Specific
 .DS_Store
